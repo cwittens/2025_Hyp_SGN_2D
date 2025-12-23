@@ -1,7 +1,7 @@
 # GPU-Accelerated Energy-Conserving Methods for the Hyperbolized Serre-Green-Naghdi Equations in 2D
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-success.svg)](https://opensource.org/licenses/MIT)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.svg)](https://doi.org/10.5281/zenodo.TODO)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.svg)](https://doi.org/10.5281/zenodo.18038219)
 
 This repository contains information and code to reproduce the results presented
 in the article
@@ -25,7 +25,7 @@ use the implementations provided here, please **also** cite this repository as
   author={Wittenstein, Collin and Marks, Vincent and Ricchiuto, Mario and Ranocha, Hendrik},
   year={2025},
   howpublished={\url{https://github.com/cwittens/2025_Hyp_SGN_2D}},
-  doi={10.5281/zenodo.TODO}
+  doi={10.5281/zenodo.18038219}
 }
 ```
 
