@@ -1,0 +1,28 @@
+{
+    "license": "MIT",
+    "title": "Reproducibility repository for GPU-Accelerated Energy-Conserving Methods for the Hyperbolized Serre-Green-Naghdi Equations in 2D",
+    "upload_type": "software",
+    "creators": [
+        {
+            "affiliation": "Department of Electrical Engineering and Computer Science, Massachusetts Institute of Technology, Cambridge, MA 02139, USA",
+            "name": "Wittenstein, Collin",
+            "orcid": "0009-0006-8591-278X"
+        },
+        {
+            "affiliation": "Institute of Mathematics, Johannes Gutenberg University Mainz, 55099 Mainz, Germany",
+            "name": "Marks, Vincent",
+            "orcid": "0009-0007-4973-5074"
+        },
+        {
+            "affiliation": "Inria at University of Bordeaux, France",
+            "name": "Ricchiuto, Mario",
+            "orcid": "0000-0002-1679-7339"
+        },
+        {
+            "affiliation": "Institute of Mathematics, Johannes Gutenberg University Mainz, 55099 Mainz, Germany",
+            "name": "Ranocha, Hendrik",
+            "orcid": "0000-0002-3456-2277"
+        }
+    ],
+    "access_right": "open"
+}
