@@ -97,7 +97,7 @@ function reproduce_energy_variable_results(backend, tspan=(0.0, 100.0))
         idx = 1
         p = plot(saved_values.t[1:idx:end], energy_derivatives[1:idx:end],
             label=L"\langle \partial_q E, \partial_t q \rangle_M",
-            xlabel=L"t", ylabel=L"\langle \partial_q E, \partial_t q \rangle_M",
+            xlabel="t", ylabel=L"\langle \partial_q E, \partial_t q \rangle_M",
             title=title,
             legend=false,)
         push!(P, p)

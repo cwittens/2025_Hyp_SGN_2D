@@ -85,8 +85,8 @@ function reproduce_riemann_problem_results(backend)
 
 
     plot!(p, gridx, h_final_cross,
-        xlabel=L"x",
-        ylabel=L"h",
+        xlabel="x",
+        ylabel="h",
         label=L"h^{num}",
         legend=:bottomleft,
         grid=true,

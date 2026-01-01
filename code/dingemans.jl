@@ -92,7 +92,7 @@ function run_dingemans_simulation(backend, reflecting_bc)
     cache = create_cache(backend=backend, λ=λ, g=g, gridx=gridx, gridy=gridy, b=b, reflecting_bc=reflecting_bc)
 
     saveat = collect(range(tspan..., 1000))
-    push!(saveat, 14.0, 28.0, 42.0, 70.0) # add the times where we want to look at speficially 
+    push!(saveat, 14.0, 28.0, 42.0, 70.0) # add the times where we want to look at specifically 
     saveat = unique(sort(saveat))
     callback, saved_values = save_and_print_callback(saveat, save_everything=false, print_every_n=2000)
 
@@ -114,7 +114,7 @@ function reproduce_dingemans_results(backend)
 
 
     # plot like in https://numericalmathematics.github.io/DispersiveShallowWater.jl/stable/dingemans/#Visualization-of-Temporal-Evolution
-    # curretly not saved as a figure
+    # currently not saved as a figure
     #=
     times = [14.0, 28.0, 42.0, 70.0]
     y_limits = (-0.03, 0.87)
@@ -180,9 +180,9 @@ function reproduce_dingemans_results(backend)
 
     end
 
-    ylabel!(snapshot_plots_time[1], "η")
-    ylabel!(snapshot_plots_time[3], "η")
-    ylabel!(snapshot_plots_time[5], "η")
+    ylabel!(snapshot_plots_time[1], "h + b")
+    ylabel!(snapshot_plots_time[3], "h + b")
+    ylabel!(snapshot_plots_time[5], "h + b")
     yticks!(snapshot_plots_time[2], [0.78, 0.80, 0.82, 0.84, 0.86], [""])
     yticks!(snapshot_plots_time[4], [0.78, 0.80, 0.82, 0.84, 0.86], [""])
     yticks!(snapshot_plots_time[6], [0.78, 0.80, 0.82, 0.84, 0.86], [""])
@@ -201,29 +201,29 @@ function reproduce_dingemans_results(backend)
 
     # plot setup
 
-    p_inital = plot([], [], color=1, label="Initial condition")
-    plot!(p_inital, [], [], color=:black, label="Bathymetry")
-    vline!(p_inital, collect(x_values), label="Gauge locations", color=2, linestyle=:dash, alpha=0.5)
+    p_initial = plot([], [], color=1, label="Initial condition")
+    plot!(p_initial, [], [], color=:black, label="Bathymetry")
+    vline!(p_initial, collect(x_values), label="Gauge locations", color=2, linestyle=:dash, alpha=0.5)
 
-    plot!(p_inital, gridx, saved_values.saveval[1][:, 1, 1] .+ b[:, 1],
+    plot!(p_initial, gridx, saved_values.saveval[1][:, 1, 1] .+ b[:, 1],
         label="",
         color=1,
     )
 
-    plot!(p_inital, gridx, b[:, 1],
+    plot!(p_initial, gridx, b[:, 1],
         label="",
         color=:black,
         legend=:bottomleft,
         # title="Initial setup",
         title="",
         xlabel="x",
-        ylabel="η",
+        ylabel="h + b",
         ylims=(-0.03, 0.90),
         size = (600, 400)
     )
 
 
 
-    @info "figure saved at:" savefig(p_inital, joinpath(plots_folder, "dingemans_initial_setup.pdf"))
+    @info "figure saved at:" savefig(p_initial, joinpath(plots_folder, "dingemans_initial_setup.pdf"))
 
 end
