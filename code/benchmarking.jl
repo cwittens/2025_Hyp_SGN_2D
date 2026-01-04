@@ -100,7 +100,7 @@ plot!(p, NX_NVIDIA, Times_NVIDIA,
     label="Nvidia H100",
     color=nvidia_green, marker=:circle,
     # xlabel="Nx", 
-    xlabel=L"N_x" * " (with " * L"N_{total} = N_x \times N_x/2" * ")",
+    xlabel=L"\mathcal{N}_x" * " (with " * L"\mathcal{N}_{total} = \mathcal{N}_x \times \mathcal{N}_x/2" * ")",
     ylabel="Wall clock time (s)",
     # title="Execution Time vs Grid Size",
     xscale=:log10, yscale=:log10,
@@ -113,7 +113,7 @@ plot!(p, NX_NVIDIA, Times_NVIDIA,
 ylim = ylims(p)
 xlim = xlims(p)
 
-plot!(p, ref_line_x, ref_line_y, label=L"O(N_x^{2.7})", ls=:dash, color=:black, lw=2, ylims=ylim, xlims=xlim)
+plot!(p, ref_line_x, ref_line_y, label=L"O(\mathcal{N}_x^{2.7})", ls=:dash, color=:black, lw=2, ylims=ylim, xlims=xlim)
 
 @info "Saving benchmarking plot..." savefig(p, joinpath(plots_folder, "benchmarking_plot.pdf"))
 
@@ -158,7 +158,7 @@ plot!(p, Problem_Size, Times_RHS_NVIDIA,
     label="Nvidia H100",
     color=nvidia_green, marker=:circle,
     # xlabel="Nx", 
-    xlabel="Number of grid points: " * L"N_{total} = N_x \times N_y",#* " (problem size ~ " * L"N_x^2/2" * ")",
+    xlabel="Number of grid points: " * L"\mathcal{N}_{total} = \mathcal{N}_x \times \mathcal{N}_y",#* " (problem size ~ " * L"N_x^2/2" * ")",
     ylabel="Time per RHS evaluation",
     # title="Execution Time vs Grid Size",
     xscale=:log10, yscale=:log10,
@@ -171,7 +171,7 @@ plot!(p, Problem_Size, Times_RHS_NVIDIA,
 ylim = ylims(p)
 xlim = xlims(p)
 
-plot!(p, ref_line_x, ref_line_y, label=L"O(N_{total})", ls=:dash, color=:black, lw=2, ylims=ylim, xlims=xlim)
+plot!(p, ref_line_x, ref_line_y, label=L"O(\mathcal{N}_{total})", ls=:dash, color=:black, lw=2, ylims=ylim, xlims=xlim)
 
 @info "Saving benchmarking plot2..." savefig(p, joinpath(plots_folder, "benchmarking_plot_2.pdf"))
 

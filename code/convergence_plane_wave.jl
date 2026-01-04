@@ -90,7 +90,7 @@ function convergence_study_1D_plane_wave(backend)
         p_pw = plot(Ns, L2s_pw[1, :, dir_idx],
             title=title,
             label=L"h" * " — water height", marker=:o,
-            xlabel="N", ylabel=L"\Vert f_{\mathrm{num}} - f_{\mathrm{ana}} \; \Vert_{L^2}",
+            xlabel=L"\mathcal{N}", ylabel=L"\Vert f_{\mathrm{num}} - f_{\mathrm{ana}} \; \Vert_{L^2}",
             yscale=:log10, xscale=:log10,
             xticks=xtick, ms=3.5,
             legend=:topright, legend_column=1,

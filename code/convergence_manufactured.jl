@@ -165,7 +165,7 @@ function convergence_study_manufactured_solution(backend)
         p_ms = plot(
             yscale=:log10, xscale=:log10, xticks=xticks_ms,
             title=title,
-            xlabel="N", ylabel=L"\Vert f_{\mathrm{num}} - f_{\mathrm{ana}} \; \Vert_{L^2}",
+            xlabel=L"\mathcal{N}", ylabel=L"\Vert f_{\mathrm{num}} - f_{\mathrm{ana}} \; \Vert_{L^2}",
             legend=false,
             size=(700, 650)
         )
