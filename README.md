@@ -9,7 +9,7 @@ in the article
 @online{wittenstein2025hyperbolized,
   title={{GPU}-Accelerated Energy-Conserving Methods for the Hyperbolized {S}erre-{G}reen-{N}aghdi Equations in {2D}},
   author={Wittenstein, Collin and Marks, Vincent and Ricchiuto, Mario and Ranocha, Hendrik},
-  year={2025},
+  year={2026},
   eprint={TODO},
   eprinttype={arxiv},
   eprintclass={math.NA}
@@ -23,7 +23,7 @@ use the implementations provided here, please **also** cite this repository as
   title={Reproducibility repository for
          "{GPU}-Accelerated Energy-Conserving Methods for the Hyperbolized {S}erre-{G}reen-{N}aghdi Equations in {2D}"},
   author={Wittenstein, Collin and Marks, Vincent and Ricchiuto, Mario and Ranocha, Hendrik},
-  year={2025},
+  year={2026},
   howpublished={\url{https://github.com/cwittens/2025_Hyp_SGN_2D}},
   doi={10.5281/zenodo.18038219}
 }
