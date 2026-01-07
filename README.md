@@ -10,9 +10,10 @@ in the article
   title={{GPU}-Accelerated Energy-Conserving Methods for the Hyperbolized {S}erre-{G}reen-{N}aghdi Equations in {2D}},
   author={Wittenstein, Collin and Marks, Vincent and Ricchiuto, Mario and Ranocha, Hendrik},
   year={2026},
-  eprint={TODO},
-  eprinttype={arxiv},
-  eprintclass={math.NA}
+  eprint={2601.02540},
+  archivePrefix={arXiv},
+  primaryClass={math.NA},
+  url={https://arxiv.org/abs/2601.02540}, 
 }
 ```
 
