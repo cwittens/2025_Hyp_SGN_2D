@@ -6,7 +6,7 @@
 This repository contains information and code to reproduce the results presented
 in the article
 ```bibtex
-@online{wittenstein2025hyperbolized,
+@online{wittenstein2026gpu,
   title={{GPU}-Accelerated Energy-Conserving Methods for the Hyperbolized {S}erre-{G}reen-{N}aghdi Equations in {2D}},
   author={Wittenstein, Collin and Marks, Vincent and Ricchiuto, Mario and Ranocha, Hendrik},
   year={2026},
