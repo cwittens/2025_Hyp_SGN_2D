@@ -26,7 +26,7 @@ use the implementations provided here, please **also** cite this repository as
   author={Wittenstein, Collin and Marks, Vincent and Ricchiuto, Mario and Ranocha, Hendrik},
   year={2026},
   howpublished={\url{https://github.com/cwittens/2025_Hyp_SGN_2D}},
-  doi={10.5281/zenodo.18038219}
+  doi={10.5281/zenodo.18038218}
 }
 ```
 
