@@ -14,7 +14,7 @@ This document provides instructions for reproducing the numerical experiments an
 
 The following table shows approximate execution times for each experiment (including compilation):
 
-| Experiment | H100 (seconds) | CPU (seconds) |
+| Experiment | H200 (seconds) | CPU (seconds) |
 |------------|----------------|---------------|
 | One-dimensional Solitary Wave | 15.4 | 148.2 |
 | Manufactured Solution | 230.1 | too long |
@@ -34,7 +34,7 @@ To reproduce the results, first include the main code file and set your desired 
 
 ```julia
 include("code.jl")
-backend = CPU()  # or CUDABackend(), ROCBackend()
+backend = CUDABackend() # or backend = CPU(), backend = ROCBackend()
 ```
 
 Then you can run any of the following commands to reproduce specific experiments.

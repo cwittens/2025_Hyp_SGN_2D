@@ -16,6 +16,9 @@ Pkg.activate(@__DIR__)
 # Pkg.add("Statistics")
 # Pkg.add("DelimitedFiles")
 # Pkg.add("Peaks")
+# Pkg.add("NLsolve")
+# Pkg.add("SummationByPartsOperators")
+# Pkg.add("Interpolations")
 
 using OrdinaryDiffEqLowStorageRK: ODEProblem, solve, RDPK3SpFSAL35
 using DiffEqCallbacks: DiscreteCallback, SavingCallback, SavedValues, CallbackSet, terminate!
@@ -29,6 +32,9 @@ using LaTeXStrings: @L_str
 using Statistics: mean
 using DelimitedFiles: readdlm
 using Peaks: findmaxima
+using NLsolve: nlsolve, norm 
+using SummationByPartsOperators #: fourier_derivative_operator, grid
+using Interpolations: CubicSplineInterpolation
 using Plots #: plot, plot!, scatter!, scatter, layout, savefig, xlabel, ylabel, title, legend, lw, colorbar!, heatmap!, ylims
 include(joinpath(@__DIR__, "helper_functions.jl"))
 
@@ -36,33 +42,54 @@ plots_folder = joinpath(@__DIR__, "plots")
 mkpath(plots_folder) # create the plots folder if it does not exist
 
 # load all individual simulations from separate files
-# backend = CPU() # or CUDABackend(), ROCBackend()
+backend = CUDABackend() # or backend = CPU(), backend = ROCBackend()
+
+include(joinpath(@__DIR__, "hyperbolic_soliton.jl"))
+t1 = @elapsed hyperbolic_soliton_results(backend)
 
 include(joinpath(@__DIR__, "convergence_plane_wave.jl"))
-# convergence_study_1D_plane_wave(backend)
+t2 = @elapsed convergence_study_1D_plane_wave(backend)
 
 include(joinpath(@__DIR__, "convergence_manufactured.jl"))
-# convergence_study_manufactured_solution(backend)
-
-include(joinpath(@__DIR__, "dingemans.jl"))
-# reproduce_dingemans_results(backend)
-
-include(joinpath(@__DIR__, "colliding_waves.jl"))
-# reproduce_henderson_results(backend)
+t3 = @elapsed convergence_study_manufactured_solution(backend)
 
 include(joinpath(@__DIR__, "wave_over_gaussian_bump.jl"))
-# reproduce_gaussian_busto_results(backend)
-# reproduce_energy_variable_results(backend, (0.0, 100.0)) # takes a while (also because some of the analysis is being run on CPU)
+t4 = @elapsed reproduce_energy_variable_results(backend, (0.0, 100.0)) # takes a while (also because some of the analysis is being run on CPU)
 
-include(joinpath(@__DIR__, "reflecting_wave.jl"))
-# reproduce_mitsotakis_reflecting_wave_results(backend, 1)
-# reproduce_mitsotakis_reflecting_wave_results(backend, 2)
+include(joinpath(@__DIR__, "dingemans.jl"))
+t5 = @elapsed reproduce_dingemans_results(backend)
+
+include(joinpath(@__DIR__, "colliding_waves.jl"))
+t6 = @elapsed reproduce_henderson_results(backend)
 
 include(joinpath(@__DIR__, "riemann_problem.jl"))
-# reproduce_riemann_problem_results(backend)
+t7 = @elapsed reproduce_riemann_problem_results(backend)
 
 include(joinpath(@__DIR__, "favre_waves_1D.jl"))
-# reproduce_favre_1D_results(backend)
+t8 = @elapsed reproduce_favre_1D_results(backend)
 
 include(joinpath(@__DIR__, "favre_froude_1D.jl"))
-# reproduce_favre_froude(backend)
+t9 = @elapsed reproduce_favre_froude(backend)
+
+include(joinpath(@__DIR__, "reflecting_wave.jl"))
+t10 = @elapsed reproduce_mitsotakis_reflecting_wave_results(backend, 1)
+t11 = @elapsed reproduce_mitsotakis_reflecting_wave_results(backend, 2)
+
+@show t1 t2 t3 t4 t5 t6 t7 t8 t9 t10 t11
+
+include(joinpath(@__DIR__, "wave_over_gaussian_bump.jl"))
+t12 = @elapsed reproduce_gaussian_busto_results(backend)
+
+include(joinpath(@__DIR__, "semi_shoal.jl"))
+t13 = @elapsed reproduce_semi_shoal_results(backend, 1)
+t14 = @elapsed reproduce_semi_shoal_results(backend, 2)
+t15 = @elapsed reproduce_semi_shoal_results(backend, 3)
+
+include(joinpath(@__DIR__, "dam_break.jl"))
+t16 = @elapsed reproduce_cylindric_dam_break_results(backend)
+t17 = @elapsed reproduce_square_dam_break_results(backend)
+
+include(joinpath(@__DIR__, "dam_break_longterm.jl"))
+t18 = @elapsed long_term_dam_break_results(backend)
+
+@show t1 t2 t3 t4 t5 t6 t7 t8 t9 t10 t11 t12 t13 t14 t15 t16 t17 t18

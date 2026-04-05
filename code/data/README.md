@@ -186,6 +186,82 @@ all_data = data_favre()
 
 The function returns a dictionary where keys are tuples `(ε, t)` and values are the corresponding data arrays with x-coordinates and wave heights.
 
+### Semi-circular Shoal Data (`circular_shoal/`)
+
+Experimental data for wave propagation over a semi-circular shoal, originally from Whalin (1971). The data were digitally scraped from:
+
+```bibtex
+@article{RicchiutoFilippini2014,
+  title = {Upwind residual discretization of enhanced Boussinesq equations for wave propagation over complex bathymetries},
+  journal = {Journal of Computational Physics},
+  volume = {271},
+  pages = {306-341},
+  year = {2014},
+  note = {Frontiers in Computational Physics},
+  issn = {0021-9991},
+  doi = {https://doi.org/10.1016/j.jcp.2013.12.048},
+  author = {M. Ricchiuto and A.G. Filippini}
+}
+```
+
+#### Data Format
+
+The directory contains CSV files named `T{i}_{j}.csv` where `i` (1, 2, or 3) corresponds to the test case and `j` is the harmonic number. Each file contains two columns: x-coordinate and wave height amplitude. Case 1 has 2 files (first and second harmonic), while cases 2 and 3 have 3 files each (first, second, and third harmonic).
+
+Three test cases with periodic wave trains:
+- (a) T=1s, A=0.0195m, h₀/λ = 0.306
+- (b) T=2s, A=0.0075m, h₀/λ = 0.117
+- (c) T=3s, A=0.0068m, h₀/λ = 0.074
+
+#### Usage
+
+In order to access the data, execute:
+
+```julia
+X, H = data_semi_shoal(i)
+```
+
+Where `i` is 1, 2, or 3 for the different test cases. The function returns:
+- `X`: Array of x-coordinate arrays for each harmonic
+- `H`: Array of wave height amplitude arrays for each harmonic
+
+### Dam Break Reference Data (`dam_break/`)
+
+Numerical reference data for 2D dam break problems from:
+
+```bibtex
+@article{Tkachenko2022,
+  title    = {Extended {L}agrangian approach for the numerical study of multidimensional dispersive waves: Applications to the {S}erre-{G}reen-{N}aghdi equations},
+  journal  = {Journal of Computational Physics},
+  volume   = {477},
+  pages    = {111901},
+  year     = {2023},
+  issn     = {0021-9991},
+  doi      = {https://doi.org/10.1016/j.jcp.2022.111901},
+  author   = {Tkachenko, Sergey and Gavrilyuk, Sergey and Massoni, Jacques}
+}
+```
+
+#### Data Format
+
+The directory contains two CSV files:
+- `dam_break_2d_cylinder.csv`: Reference data for a cylindrical dam break problem
+- `dam_break_2d_square.csv`: Reference data for a square dam break problem
+
+Each file contains two columns: x-coordinate and water height h.
+
+#### Usage
+
+In order to access the data, execute:
+
+```julia
+x_data, h_data = data_tkachenko(i)
+```
+
+Where `i` is 1 for the cylindrical dam break or 2 for the square dam break. The function returns:
+- `x_data`: Spatial coordinates along the domain
+- `h_data`: Water heights at the corresponding spatial locations
+
 ### Froude Number Data (`Froude/`)
 
 Experimental data for Froude number studies from Favre and Treske:
