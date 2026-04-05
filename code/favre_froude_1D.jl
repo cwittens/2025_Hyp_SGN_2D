@@ -154,6 +154,6 @@ function reproduce_favre_froude(backend)
     scatter!(fig, data_treske_80[:,1], data_treske_80[:,2], label = "Treske", color = :orange, marker= :dtriangle, markersize = 7, linewidth = 2);
     scatter!(fig, data_treske_160[:,1], data_treske_160[:,2], label = "", color = :orange, marker= :dtriangle, markersize = 7, linewidth = 2)
     
-    @info "figure saved at:" savefig(fig, joinpath(plots_folder, "Froud_numbers.pdf"))
+    @info "figure saved at:" savefig(fig, joinpath(plots_folder, "Froude_numbers.pdf"))
 
 end
