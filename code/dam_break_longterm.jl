@@ -218,7 +218,6 @@ function long_term_dam_break_results(backend)
 
             fit = curve_fit(soliton_profile, x_fit, h_fit, [A0, x0])
             A_fit, x0_fit = coef(fit)
-            @show A_fit round(Int, x0_fit)
 
             x_plot = range(x_fit[1], x_fit[end], length=300)
 

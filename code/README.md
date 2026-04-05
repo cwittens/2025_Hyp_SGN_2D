@@ -20,7 +20,7 @@ The following table shows approximate execution times (in seconds) for each expe
 | One-dimensional Solitary Wave           | 29.0         | 82.5      | 148.2               |
 | Manufactured Solution                   | 229.2        | 170.4     | too long            |
 | Semidiscrete Energy Conservation        | 481.9        | 694.2     | too long            |
-| Dingemans Experiment                    | 2090         | 200.6     | 2204.2              |
+| Dingemans Experiment                    | 20.0         | 200.6     | 2204.2              |
 | Head-on Collision of Solitary Waves     | 1.8          | 10.4      | 15.1                |
 | Riemann Problem                         | 2.5          | 18.6      | 24.5                |
 | Favre Waves (Short-time Evolution)      | 3.0          | 21.9      | 38.5                |
