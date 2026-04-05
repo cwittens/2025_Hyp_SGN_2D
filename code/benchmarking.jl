@@ -97,7 +97,7 @@ plot!(p, NX_AMD, Times_AMD, label="AMD MI210", lw=3,
     color=amd_red, marker=:square)
 
 plot!(p, NX_NVIDIA, Times_NVIDIA,
-    label="Nvidia H100",
+    label="Nvidia H200",
     color=nvidia_green, marker=:circle,
     # xlabel="Nx", 
     xlabel=L"\mathcal{N}_x" * " (with " * L"\mathcal{N}_{total} = \mathcal{N}_x \times \mathcal{N}_x/2" * ")",
@@ -155,7 +155,7 @@ plot!(p, Problem_Size, Times_RHS_AMD, label="AMD MI210", lw=3,
     color=amd_red, marker=:square)
 
 plot!(p, Problem_Size, Times_RHS_NVIDIA,
-    label="Nvidia H100",
+    label="Nvidia H200",
     color=nvidia_green, marker=:circle,
     # xlabel="Nx", 
     xlabel="Number of grid points: " * L"\mathcal{N}_{total} = \mathcal{N}_x \times \mathcal{N}_y",#* " (problem size ~ " * L"N_x^2/2" * ")",
