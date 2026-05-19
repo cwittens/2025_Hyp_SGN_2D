@@ -35,7 +35,7 @@ using Peaks: findmaxima
 using NLsolve: nlsolve, norm 
 using SummationByPartsOperators #: fourier_derivative_operator, grid
 using Interpolations: CubicSplineInterpolation, Periodic
-using Plots #: plot, plot!, scatter!, scatter, layout, savefig, xlabel, ylabel, title, legend, lw, colorbar!, heatmap!, ylims
+using Plots #: plot, plot!, scatter!, scatter, layout, savefig, xlabel, ylabel, title, legend, lw, colorbar!, heatmap!, ylims, ...
 include(joinpath(@__DIR__, "helper_functions.jl"))
 
 plots_folder = joinpath(@__DIR__, "plots")
