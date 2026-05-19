@@ -425,212 +425,183 @@ function gaussian(x, y; x0=0.0, y0=0.0, A=0.1, σ=1.0)
     return A * exp(-((x - x0)^2 + (y - y0)^2) / (2 * σ^2))
 end
 
-# solitary wave solution for the hyperbolic SGN
-function solve_for_lambda(λ_value, N, xmin, xmax, h∞, η∞, g, A)
+####################################################
+# Function for solitons of the hyperbolized System #
+####################################################
+function solve_for_lambda(λ_value, N, xmin, xmax, h∞, g, A)
     #  parameters
     ε = A / h∞
     c = sqrt(g * h∞ * (1 + ε))
     k_wave = sqrt(3 * ε / (4 * h∞^2 * (1 + ε)))
     β = λ_value / (c^2 * h∞^2)
-    
+
     # grid
     D = fourier_derivative_operator(xmin, xmax, N)
     x = SummationByPartsOperators.grid(D)
     D2 = D^2
-    
+
     # analytical solution is used as inital guess
     Φ_h_init = @. h∞ * (1 + ε * sech(k_wave * x)^2)
-    Φ_η_init = @. η∞ * (1 + ε * sech(k_wave * x)^2)
+    Φ_η_init = copy(Φ_h_init)
     Φ_u_init = c .* (1 .- h∞ ./ Φ_h_init)
     Φ_w_init = (D * Φ_η_init) .* (-c .+ Φ_u_init)
     u_init = vcat(Φ_h_init, Φ_η_init)
-    
+
     # sol system
-    sol = nlsolve((F, u) -> compute_residual!(F, u, D, D2, β, λ_value, c, g, h∞, η∞, x), 
-                  u_init, 
-                  method=:trust_region, 
+    sol = nlsolve((F, u) -> compute_residual!(F, u, D, D2, β, λ_value, c, g, h∞, x),
+                  u_init,
+                  method=:trust_region,
                   ftol=1e-12,
                   iterations=5_00,
                   show_trace=true)
-    
+
     u_solution = sol.zero
     Φ_h_sol = u_solution[1:length(x)]
     Φ_η_sol = u_solution[length(x)+1:2*length(x)]
-    
-    # calc other solutions with the found solution
+
+    # calculate other solutions with the found solution
     Φ_u_sol = c .* (1 .- h∞ ./ Φ_h_sol)
     Φ_w_sol = (D * Φ_η_sol) .* (-c .+ Φ_u_sol)
-    
+
     # get residuals
-    res_final, r1_final, r2_final = check_residual(u_solution, D, D2, β, λ_value, c, g, h∞, η∞, x)
-    
+    res_final, r1_final, r2_final = check_residual(u_solution, D, D2, β, λ_value, c, g, h∞, x)
+
     return Φ_h_sol, Φ_η_sol, Φ_u_sol, Φ_w_sol, Φ_h_init, Φ_η_init, Φ_u_init, Φ_w_init, x, res_final, sol.f_converged
 end
 
-function compute_residual!(F, u_vec, 
-                                   D, D2, β, λ, c, g, h∞, η∞, x)
+function compute_residual!(F, u_vec,
+                                   D, D2, β, λ, c, g, h∞, x)
     N_points = length(x)
-    
+
     Φ_h = @view u_vec[1:N_points]
     Φ_η = @view u_vec[N_points+1:2N_points]
-    
+
     L1 = - Φ_h + (1/β) * D2 * Φ_η + Φ_η
-    L2 = (1/λ) * Φ_h + (1/3) * Φ_η 
-    
+    L2 = (1/3) * Φ_η
+
     dΦ_h = D * Φ_h
     dΦ_η = D * Φ_η
-    
+
     N1 = (1/β) * (dΦ_h .* dΦ_η) ./ Φ_h
-    
-    N2 = @.  (1/λ) * Φ_h + (c^2 * h∞ / λ) * (1 - h∞ / Φ_h) - (0.5 * g / λ) * Φ_h^2 +
-             (1/3) * (Φ_η^2 / Φ_h) + 
-             (1/λ) * (0.5 * g * h∞^2 + (λ/3) * η∞ - (λ/3) * η∞^2 / h∞)
-    
+
+    N2 = @. (c^2 * h∞ / λ) * (1 - h∞ / Φ_h) - (0.5 * g / λ) * Φ_h^2 +
+            (1/3) * (Φ_η^2 / Φ_h) +
+            0.5 * g * h∞^2 / λ
+
     F[1:N_points] = L1 - N1
     F[N_points+1:2N_points] = L2 - N2
-    
+
     return F
 end
 
-function check_residual(u_vec, D, D2, β, λ, c, g, h∞, η∞, x)
+function check_residual(u_vec, D, D2, β, λ, c, g, h∞, x)
     N_points = length(x)
-    
+
     Φ_h = @view u_vec[1:N_points]
     Φ_η = @view u_vec[N_points+1:2N_points]
-    
+
     dΦ_h = D * Φ_h
     dΦ_η = D * Φ_η
-    
+
     L1 = -Φ_h + (1/β) * D2 * Φ_η + Φ_η
     N1 = (1/β) * (dΦ_h .* dΦ_η) ./ Φ_h
-    
-    L2 = (1/λ) * Φ_h + (1/3) * Φ_η
-    N2 = @. (1/λ) * Φ_h + (c^2 * h∞ / λ) * (1 - h∞ / Φ_h) - (0.5 * g / λ) * Φ_h^2 +
-             (1/3) * (Φ_η^2 / Φ_h) +
-             (1/λ) * (0.5 * g * h∞^2 + (λ/3) * η∞ - (λ/3) * η∞^2 / h∞)
-    
+
+    L2 = (1/3) * Φ_η
+    N2 = @. (c^2 * h∞ / λ) * (1 - h∞ / Φ_h) - (0.5 * g / λ) * Φ_h^2 +
+            (1/3) * (Φ_η^2 / Φ_h) +
+            0.5 * g * h∞^2 / λ
+
     r1 = norm(L1 - N1, Inf)
     r2 = norm(L2 - N2, Inf)
     res = r1 + r2
-    
+
     return res, r1, r2
 end
 
-function setup_hyperbolic_solitary_wave_2D(t, gridx, gridy, backend, reflecting_bc;
-                                            λ=500, N=2^10, h∞=1.0, g=9.81, A=0.3,
-                                            coord0=0.0, direction=:x,
-                                            b=zeros(length(gridx), length(gridy)))
 
-    nx, ny = length(gridx), length(gridy)
-
-    #parameters
-    η∞ = h∞
-    ε = A / h∞
-    c = sqrt(g * h∞ * (1 + ε))
-    k_wave = sqrt(3 * ε / (4 * h∞^2 * (1 + ε)))
-    β = λ / (c^2 * h∞^2)
-
-    if direction == :x
-        coordmin, coordmax = extrema(gridx)
-        if reflecting_bc == Val(false)
-            coordmax = coordmax + step(gridx)
-        end
-    elseif direction == :y
-        coordmin, coordmax = extrema(gridy)
-        if reflecting_bc == Val(false)
-            coordmax = coordmax + step(gridy)
-        end
-    else
-        error("Direction must be :x or :y")
-    end
-
-    N1d = N # use a finer grid for the solution and interpolate later to the actual grid
-    xmin1d, xmax1d = coordmin, coordmax
-
-    # using Fourier derivative operator 
-    D   = fourier_derivative_operator(xmin1d, xmax1d, N1d)
-    x1d = SummationByPartsOperators.grid(D)
-    D2  = D^2
-
-    # center around cord0
-    x_shifted = x1d .- coord0 .- c * t  
-
-    # initial guess from analytical soliton
-    Φ_h_init = @. h∞ * (1 + ε * sech(k_wave * x_shifted)^2)
-    Φ_η_init = @. η∞ * (1 + ε * sech(k_wave * x_shifted)^2)
-    u_init   = vcat(Φ_h_init, Φ_η_init)
-
-    # solve
-    sol = nlsolve(
-        (F, u) -> compute_residual!(F, u, D, D2, β, λ, c, g, h∞, η∞, x1d),
-        u_init;
-        method=:trust_region, ftol=1e-13, iterations=500, show_trace=false
-    )
-    @show sol.f_converged
-
-    Φ_h_sol = sol.zero[1:N1d]
-    Φ_η_sol = sol.zero[N1d+1:2N1d]
-    Φ_u_sol = c .* (1 .- h∞ ./ Φ_h_sol)
-    Φ_w_sol = (D * Φ_η_sol) .* (-c .+ Φ_u_sol)
-
-    # interpolate
-    h_itp  = CubicSplineInterpolation(x1d, Φ_h_sol)
-    η_itp  = CubicSplineInterpolation(x1d, Φ_η_sol)
-    vx_itp = CubicSplineInterpolation(x1d, Φ_u_sol)
-    w_itp  = CubicSplineInterpolation(x1d, Φ_w_sol)
-
-    # expand to 2D and interpolate to actual grid
-    if direction == :x
-        xs = gridx .- coord0 .- c * t
-        
-        if reflecting_bc == Val(false)
-            L = xmax1d - xmin1d
-            xs = @. xmin1d + mod(xs - xmin1d, L)
-        end
-
-        h_intp  = h_itp.(xs)
-        η_intp  = η_itp.(xs)
-        u_intp  = vx_itp.(xs)
-        w_intp  = w_itp.(xs)
-
-        h  = repeat(h_intp,  1, ny)
-        η  = repeat(η_intp,  1, ny)
-        vx = repeat(u_intp,  1, ny)
-        vy = zeros(nx, ny)
-        w  = repeat(w_intp,  1, ny)
-
-    else  # :y
-        ys = gridy .- coord0 .- c * t
-
-        if reflecting_bc == Val(false)
-            L = xmax1d - xmin1d
-            ys = @. xmin1d + mod(ys - xmin1d, L)
-        end
-
-        h_intp  = h_itp.(ys)
-        η_intp  = η_itp.(ys)
-        u_intp  = vx_itp.(ys)
-        w_intp  = w_itp.(ys)
-
-        h  = repeat(h_intp',  nx, 1)
-        η  = repeat(η_intp',  nx, 1)
-        vx = zeros(nx, ny)
-        vy = repeat(u_intp',  nx, 1)
-        w  = repeat(w_intp',  nx, 1)
-    end
-
-    h = h .- b   # adjust for bathymetry
-
-    q0 = zeros(nx, ny, 5)
-    q0[:, :, 1] .= h
-    q0[:, :, 2] .= vx
-    q0[:, :, 3] .= vy
-    q0[:, :, 4] .= η
-    q0[:, :, 5] .= w
-
-    return adapt(backend, q0)
+struct SolitaryWave1D
+    h_itp
+    η_itp
+    u_itp
+    w_itp
+    c    :: Float64
+    L    :: Float64
+    xmin :: Float64
 end
 
+
+function build_solitary_wave(; λ=500, N=2^11, xmin=-30.0, xmax=30.0,
+                               h∞=1.0, g=9.81, A=0.2
+                               )
+    ε  = A / h∞
+    c  = sqrt(g * h∞ * (1 + ε))
+
+    Φ_h, Φ_η, Φ_u, Φ_w, _, _, _, _, x, _, _ =
+        solve_for_lambda(λ, N, xmin, xmax, h∞, g, A)
+
+    L = xmax - xmin
+
+    h_itp = CubicSplineInterpolation((x,), Φ_h; extrapolation_bc=Periodic())
+    η_itp = CubicSplineInterpolation((x,), Φ_η; extrapolation_bc=Periodic())
+    u_itp = CubicSplineInterpolation((x,), Φ_u; extrapolation_bc=Periodic())
+    w_itp = CubicSplineInterpolation((x,), Φ_w; extrapolation_bc=Periodic())
+
+    return SolitaryWave1D(h_itp, η_itp, u_itp, w_itp, c, L, xmin)
+end
+
+
+function evaluate_solitary_wave_2D(wave::SolitaryWave1D, gridx, gridy, t, backend,
+                                    reflecting_bc;
+                                    coord0=0.0, direction=:x,
+                                    b=zeros(length(gridx), length(gridy)))
+
+    nx, ny = length(gridx), length(gridy)
+    (; h_itp, η_itp, u_itp, w_itp, c, xmin) = wave  
+
+    
+    if direction == :x
+        coordmin = first(gridx)
+        coordmax = reflecting_bc == Val(false) ? last(gridx) + step(gridx) : last(gridx)
+    else
+        coordmin = first(gridy)
+        coordmax = reflecting_bc == Val(false) ? last(gridy) + step(gridy) : last(gridy)
+    end
+    L_phys = coordmax - coordmin  
+
+    function eval_profiles(coords)
+        xs = @. xmin + mod(coords - coord0 - c * t - coordmin, L_phys)
+        return h_itp.(xs), η_itp.(xs), u_itp.(xs), w_itp.(xs)
+    end
+
+    if direction == :x
+        h1d, η1d, u1d, w1d = eval_profiles(collect(gridx))
+        h  = repeat(h1d,  1, ny)
+        η  = repeat(η1d,  1, ny)
+        vx = repeat(u1d,  1, ny)
+        vy = zeros(nx, ny)
+        w  = repeat(w1d,  1, ny)
+    elseif direction == :y
+        h1d, η1d, u1d, w1d = eval_profiles(collect(gridy))
+        h  = repeat(h1d', nx, 1)
+        η  = repeat(η1d', nx, 1)
+        vx = zeros(nx, ny)
+        vy = repeat(u1d', nx, 1)
+        w  = repeat(w1d', nx, 1)
+    else
+        error("direction must be :x or :y")
+    end
+
+    h = h .- b
+
+    q = zeros(nx, ny, 5)
+    q[:, :, 1] .= h
+    q[:, :, 2] .= vx
+    q[:, :, 3] .= vy
+    q[:, :, 4] .= η
+    q[:, :, 5] .= w
+
+    return adapt(backend, q)
+end
 
 ##########################################
 # Function for analysis of the results

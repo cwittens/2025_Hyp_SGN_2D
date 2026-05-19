@@ -45,6 +45,123 @@ function run_plan_wave_simulation(N, direction, backend, reflecting_bc=Val(false
     return saved_values, gridx, gridy, (; coord0, A, h∞, direction, b)
 end
 
+function convergence_study_1D_plane_wave_combined(backend)
+    reflecting_bc = Val(false)
+
+    coord0 = 0.0
+    A      = 0.2
+    h∞     = 1.0
+    g      = 9.81
+
+    xmin = -30.0
+    xmax =  30.0
+    ymin = -30.0
+    ymax =  30.0
+
+    tspan      = (0.0, (xmax - xmin) / sqrt(1.2 * g))
+    Ns         = [128, 256, 512, 1024]
+    directions = [:x, :y]
+
+    # SGN soliton using λ = 30_000
+    L2s_std = zeros(2, length(Ns), length(directions))
+    for (j, direction) in enumerate(directions)
+        for (i, N) in enumerate(Ns)
+            println("Standard SGN — direction=$(direction), N=$(N)")
+            saved_values, gridx, gridy, params = run_plan_wave_simulation(N, direction, backend)
+            qend = setup_solitary_wave_2D(saved_values.t[end], gridx, gridy, CPU(), reflecting_bc; params...)
+            for k in 1:2
+                k_v = (direction == :y && k == 2) ? k + 1 : k
+                L2s_std[k, i, j] = calculate_1D_l2(
+                    saved_values.saveval[end][:, :, k_v], qend[:, :, k_v], gridx, gridy, direction)
+            end
+        end
+    end
+
+    # Hyperbolic SGN soliton using λ = 500 
+    λ_hyp   = 500
+    L2s_hyp = zeros(2, length(Ns), length(directions))
+    wave    = build_solitary_wave(; λ=λ_hyp, h∞=h∞, g=g, A=A)
+
+    for (j, direction) in enumerate(directions)
+        for (i, N) in enumerate(Ns)
+            println("Hyperbolic SGN — direction=$(direction), N=$(N)")
+            Nx, Ny = direction == :x ? (N, 5) : (5, N)
+            gridx  = get_grid(Nx, xmin, xmax, reflecting_bc)
+            gridy  = get_grid(Ny, ymin, ymax, reflecting_bc)
+            b      = zeros(Nx, Ny)
+
+            q0 = evaluate_solitary_wave_2D(
+                wave, gridx, gridy, tspan[1], backend, reflecting_bc;
+                coord0=coord0, direction=direction, b=b)
+            cache    = create_cache(; backend=backend, λ=λ_hyp, g=g,
+                                      gridx=gridx, gridy=gridy, b=b,
+                                      reflecting_bc=reflecting_bc)
+            saveat   = range(tspan..., 2)
+            callback, saved_values = save_and_print_callback(
+                saveat; save_everything=true, print_every_n=100_000)
+
+            prob = ODEProblem(rhs_split!, q0, tspan, cache)
+            solve(prob, RDPK3SpFSAL35();
+                  save_everystep=false, reltol=1e-6, abstol=1e-6, callback=callback)
+
+            qend = evaluate_solitary_wave_2D(
+                wave, gridx, gridy, saved_values.t[end], CPU(), reflecting_bc;
+                coord0=coord0, direction=direction, b=b)
+
+            for k in 1:2
+                k_v = (direction == :y && k == 2) ? k + 1 : k
+                L2s_hyp[k, i, j] = calculate_1D_l2(
+                    saved_values.saveval[end][:, :, k_v], qend[:, :, k_v], gridx, gridy, direction)
+            end
+        end
+    end
+
+    # Combined plots
+    xtick = (Ns, string.(Ns))
+
+    function make_panel(L2s, dir_idx, label2; show_legend, show_ylabel, right_margin=2Plots.mm, ylims_fixed=nothing)
+        p = plot(Ns, L2s[1, :, dir_idx];
+            title="",
+            label=show_legend ? L"h" * " — water height" : "",
+            marker=:o,
+            xlabel=L"\mathcal{N}",
+            ylabel=show_ylabel ? L"\Vert f_{\mathrm{num}} - f_{\mathrm{ana}} \; \Vert_{L^2}" : "",
+            yscale=:log10, xscale=:log10,
+            xticks=xtick, ms=3.5,
+            legend=show_legend ? :topright : false, legend_column=1)
+        plot!(p, Ns, L2s[2, :, dir_idx]; label=show_legend ? label2 : "", marker=:o, ms=3.5)
+        ylim     = ylims_fixed !== nothing ? ylims_fixed : ylims(p)
+        xlim     = xlims(p)
+        Ns_ref   = range(0.8 * Ns[1], 1.2 * Ns[end]; length=100)
+        ref_line = Ns[1]^2.0 * mean(L2s[:, 1, dir_idx]) .* (Ns_ref .^ -2.0)
+        plot!(p, Ns_ref, ref_line;
+            label=show_legend ? L"2^{\mathrm{nd}}" * " order reference line" : "",
+            linestyle=:dash, color=6, xlims=xlim, ylims=ylim)
+        left_m = show_ylabel ? 8Plots.mm : 2Plots.mm
+        plot!(p; left_margin=left_m, bottom_margin=10Plots.mm, right_margin=right_margin,
+              yformatter=show_ylabel ? :auto : _->"")
+        return p, ylim
+    end
+
+    panel_gap = -5Plots.mm  # reduce gap between panels 
+
+    for dir_idx in 1:length(directions)
+        if dir_idx == 1
+            label2  = L"u" * " — velocity in " * L"x"
+            save_as = joinpath(plots_folder, "plane_wave_convergence_study_combined_in_x.pdf")
+        else
+            label2  = L"v" * " — velocity in " * L"y"
+            save_as = joinpath(plots_folder, "plane_wave_convergence_study_combined_in_y.pdf")
+        end
+
+        p_std, ylim_std = make_panel(L2s_std, dir_idx, label2; show_legend=true,  show_ylabel=true,  right_margin=panel_gap)
+        p_hyp, _        = make_panel(L2s_hyp, dir_idx, label2; show_legend=false, show_ylabel=false, ylims_fixed=ylim_std)
+        p_combined = plot(p_std, p_hyp; layout=(1, 2), size=(1200, 400))
+
+        @info "figure saved at:" savefig(p_combined, save_as)
+    end
+end
+
 function convergence_study_1D_plane_wave(backend)
     reflecting_bc = Val(false)
 
@@ -105,7 +222,7 @@ function convergence_study_1D_plane_wave(backend)
 
         plot!(p_pw, left_margin=2Plots.mm, bottom_margin=1Plots.mm,)
 
-        @info "figure saved at:" savefig(p_pw, joinpath(plots_folder, save_as))
+        @info "figure saved at:" savefig(p_pw,  save_as)
 
     end
 
