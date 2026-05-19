@@ -46,15 +46,14 @@ backend = CUDABackend() # or backend = CPU(), backend = ROCBackend()
 
 Then you can run any of the following commands to reproduce specific experiments.
 
-## 5 Relative Equilibrium Structure
-
+## 5 Computing Solitary Waves Numerically
 ```julia
 hyperbolic_soliton_results(backend)
 ```
 
 ## 6.1 Convergence Studies
 
-### 6.1.1 One-dimensional Solitary Wave
+### 6.1.1 One-Dimensional Solitary Wave Solutions
 ```julia
 convergence_study_1D_plane_wave_combined(backend)
 ```
