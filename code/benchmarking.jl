@@ -171,7 +171,7 @@ plot!(p, Problem_Size, Times_RHS_NVIDIA,
 ylim = ylims(p)
 xlim = xlims(p)
 
-plot!(p, ref_line_x, ref_line_y, label=L"O(\mathcal{N}_{total})", ls=:dash, color=:black, lw=2, ylims=ylim, xlims=xlim)
+plot!(p, ref_line_x, ref_line_y, label=L"\mathcal{O}(\mathcal{N}_{total})", ls=:dash, color=:black, lw=2, ylims=ylim, xlims=xlim)
 
 @info "Saving benchmarking plot2..." savefig(p, joinpath(plots_folder, "benchmarking_plot_2.pdf"))
 
