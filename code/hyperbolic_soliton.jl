@@ -42,19 +42,28 @@ function hyperbolic_soliton_results(backend)
 
     # plot
     p_errors = plot(λ_values, errors_h_Linf,
-        marker=:circle, linestyle=:solid, label=L"h",
+        marker=:circle, linestyle=:solid, color=1, label=L"h",
         xlabel=L"\lambda",
         ylabel=L"\Vert f_{\lambda} - f_{\mathrm{SGN}} \Vert_{\infty}",
         yscale=:log10, xscale=:log10,
         legend=:bottomleft,
         left_margin=3Plots.mm)
 
-    plot!(p_errors, λ_values, errors_η_Linf,
-        marker=:square, linestyle=:dash, label=L"\eta")
     plot!(p_errors, λ_values, errors_u_Linf,
-        marker=:diamond, linestyle=:dot, label=L"u")
+        marker=:diamond, linestyle=:dot, color=2, label=L"u")
+    plot!(p_errors, λ_values, errors_η_Linf,
+        marker=:square, linestyle=:dash, color=4, label=L"\eta")
     plot!(p_errors, λ_values, errors_w_Linf,
-        marker=:utriangle, linestyle=:dashdot, label=L"w")
+        marker=:utriangle, linestyle=:dashdot, color=5, label=L"w")
+
+    ylim_p = ylims(p_errors)
+    xlim_p = xlims(p_errors)
+    λ_ref = 10 .^ range(log10(0.8 * λ_values[1]), log10(1.2 * λ_values[end]); length=100)
+    ref_line = λ_values[1] * 0.8 * errors_u_Linf[1] ./ λ_ref
+    plot!(p_errors, λ_ref, ref_line,
+        linestyle=:solid, alpha=0.7, color=:black,
+        label=L"1^{\mathrm{st}}" * " order reference line",
+        xlims=xlim_p, ylims=ylim_p)
 
     savefig(p_errors, joinpath(plots_folder, "solitary_wave_convergence.pdf"))
 end

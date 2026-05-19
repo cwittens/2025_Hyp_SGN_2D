@@ -48,7 +48,7 @@ include(joinpath(@__DIR__, "hyperbolic_soliton.jl"))
 # hyperbolic_soliton_results(backend)
 
 include(joinpath(@__DIR__, "convergence_plane_wave.jl"))
-# convergence_study_1D_plane_wave(backend)
+# convergence_study_1D_plane_wave_combined(backend)
 
 include(joinpath(@__DIR__, "convergence_manufactured.jl"))
 # convergence_study_manufactured_solution(backend)

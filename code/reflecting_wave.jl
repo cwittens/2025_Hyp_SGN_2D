@@ -37,7 +37,7 @@ function reproduce_mitsotakis_reflecting_wave_results(backend, k::Int)
         error("Int must be 1 or 2")
     end
 
-    
+
 
     reflecting_bc = Val(true)
     λ = 500
@@ -57,7 +57,7 @@ function reproduce_mitsotakis_reflecting_wave_results(backend, k::Int)
 
     cache = create_cache(backend=backend, λ=λ, g=9.81, gridx=gridx, gridy=gridy, b=b, reflecting_bc=reflecting_bc)
 
-    saveat = times .* sqrt(1 / 9.81) 
+    saveat = times .* sqrt(1 / 9.81)
 
     callback, saved_values = save_and_print_callback(saveat, save_everything=false, print_every_n=500)
 
@@ -71,7 +71,7 @@ function reproduce_mitsotakis_reflecting_wave_results(backend, k::Int)
             xlabel="x", ylabel="h",
             color=:red,
             ms=1, alpha=0.3,
-            legend_column=2, 
+            legend_column=2,
             label="numerical data"# from Mitsotakis et al.",
         )
         # for i in 1:length(saved_values.t)
@@ -82,7 +82,7 @@ function reproduce_mitsotakis_reflecting_wave_results(backend, k::Int)
                 plot!(p1, gridx, hi, label="t* = $(times[i])", lw=5, color=:gray, ls=:dot, alpha=0.5)
             else
 
-                hi = saved_values.saveval[i][:, 1] 
+                hi = saved_values.saveval[i][:, 1]
                 plot!(p1, gridx, hi, label="t* = $(times[i])", lw=3, color=colors[i])
                 scatter!(p1, data[i][:, 1], data[i][:, 2] .+ 1, #  +1 because paper uses b = -1 and looks at \eta
                     label="",
@@ -104,7 +104,7 @@ function reproduce_mitsotakis_reflecting_wave_results(backend, k::Int)
         bottom_margin=8Plots.mm, left_margin=8Plots.mm,
         # suptitle="Reflecting solitary wave with A = $(A)",
         suptitle="",
-        )
+    )
 
     savefig(P, joinpath(plots_folder, "reflecting_wave_A_$(A).pdf"))
 end

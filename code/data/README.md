@@ -186,7 +186,7 @@ all_data = data_favre()
 
 The function returns a dictionary where keys are tuples `(ε, t)` and values are the corresponding data arrays with x-coordinates and wave heights.
 
-### Semi-circular Shoal Data (`circular_shoal/`)
+### Semi-circular Shoal Data (`semi_shoal/`)
 
 Experimental data for wave propagation over a semi-circular shoal, originally from Whalin (1971). The data were digitally scraped from:
 

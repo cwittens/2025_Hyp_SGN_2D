@@ -404,7 +404,7 @@ function save_and_print_callback(saveat; print_every_n=100, save_everything=fals
         println("Step $(step_counter[]), t = $(integrator.t)")
     end
 
-    print_cb = DiscreteCallback(print_condition, print_affect!, save_positions = (false,false))
+    print_cb = DiscreteCallback(print_condition, print_affect!, save_positions=(false, false))
 
 
     if save_everything
@@ -449,11 +449,11 @@ function solve_for_lambda(λ_value, N, xmin, xmax, h∞, g, A)
 
     # sol system
     sol = nlsolve((F, u) -> compute_residual!(F, u, D, D2, β, λ_value, c, g, h∞, x),
-                  u_init,
-                  method=:trust_region,
-                  ftol=1e-12,
-                  iterations=5_00,
-                  show_trace=true)
+        u_init,
+        method=:trust_region,
+        ftol=1e-12,
+        iterations=5_00,
+        show_trace=true)
 
     u_solution = sol.zero
     Φ_h_sol = u_solution[1:length(x)]
@@ -470,22 +470,22 @@ function solve_for_lambda(λ_value, N, xmin, xmax, h∞, g, A)
 end
 
 function compute_residual!(F, u_vec,
-                                   D, D2, β, λ, c, g, h∞, x)
+    D, D2, β, λ, c, g, h∞, x)
     N_points = length(x)
 
     Φ_h = @view u_vec[1:N_points]
     Φ_η = @view u_vec[N_points+1:2N_points]
 
-    L1 = - Φ_h + (1/β) * D2 * Φ_η + Φ_η
-    L2 = (1/3) * Φ_η
+    L1 = -Φ_h + (1 / β) * D2 * Φ_η + Φ_η
+    L2 = (1 / 3) * Φ_η
 
     dΦ_h = D * Φ_h
     dΦ_η = D * Φ_η
 
-    N1 = (1/β) * (dΦ_h .* dΦ_η) ./ Φ_h
+    N1 = (1 / β) * (dΦ_h .* dΦ_η) ./ Φ_h
 
     N2 = @. (c^2 * h∞ / λ) * (1 - h∞ / Φ_h) - (0.5 * g / λ) * Φ_h^2 +
-            (1/3) * (Φ_η^2 / Φ_h) +
+            (1 / 3) * (Φ_η^2 / Φ_h) +
             0.5 * g * h∞^2 / λ
 
     F[1:N_points] = L1 - N1
@@ -503,12 +503,12 @@ function check_residual(u_vec, D, D2, β, λ, c, g, h∞, x)
     dΦ_h = D * Φ_h
     dΦ_η = D * Φ_η
 
-    L1 = -Φ_h + (1/β) * D2 * Φ_η + Φ_η
-    N1 = (1/β) * (dΦ_h .* dΦ_η) ./ Φ_h
+    L1 = -Φ_h + (1 / β) * D2 * Φ_η + Φ_η
+    N1 = (1 / β) * (dΦ_h .* dΦ_η) ./ Φ_h
 
-    L2 = (1/3) * Φ_η
+    L2 = (1 / 3) * Φ_η
     N2 = @. (c^2 * h∞ / λ) * (1 - h∞ / Φ_h) - (0.5 * g / λ) * Φ_h^2 +
-            (1/3) * (Φ_η^2 / Φ_h) +
+            (1 / 3) * (Φ_η^2 / Φ_h) +
             0.5 * g * h∞^2 / λ
 
     r1 = norm(L1 - N1, Inf)
@@ -524,17 +524,17 @@ struct SolitaryWave1D
     η_itp
     u_itp
     w_itp
-    c    :: Float64
-    L    :: Float64
-    xmin :: Float64
+    c::Float64
+    L::Float64
+    xmin::Float64
 end
 
 
 function build_solitary_wave(; λ=500, N=2^11, xmin=-30.0, xmax=30.0,
-                               h∞=1.0, g=9.81, A=0.2
-                               )
-    ε  = A / h∞
-    c  = sqrt(g * h∞ * (1 + ε))
+    h∞=1.0, g=9.81, A=0.2
+)
+    ε = A / h∞
+    c = sqrt(g * h∞ * (1 + ε))
 
     Φ_h, Φ_η, Φ_u, Φ_w, _, _, _, _, x, _, _ =
         solve_for_lambda(λ, N, xmin, xmax, h∞, g, A)
@@ -551,14 +551,14 @@ end
 
 
 function evaluate_solitary_wave_2D(wave::SolitaryWave1D, gridx, gridy, t, backend,
-                                    reflecting_bc;
-                                    coord0=0.0, direction=:x,
-                                    b=zeros(length(gridx), length(gridy)))
+    reflecting_bc;
+    coord0=0.0, direction=:x,
+    b=zeros(length(gridx), length(gridy)))
 
     nx, ny = length(gridx), length(gridy)
-    (; h_itp, η_itp, u_itp, w_itp, c, xmin) = wave  
+    (; h_itp, η_itp, u_itp, w_itp, c, xmin) = wave
 
-    
+
     if direction == :x
         coordmin = first(gridx)
         coordmax = reflecting_bc == Val(false) ? last(gridx) + step(gridx) : last(gridx)
@@ -566,7 +566,7 @@ function evaluate_solitary_wave_2D(wave::SolitaryWave1D, gridx, gridy, t, backen
         coordmin = first(gridy)
         coordmax = reflecting_bc == Val(false) ? last(gridy) + step(gridy) : last(gridy)
     end
-    L_phys = coordmax - coordmin  
+    L_phys = coordmax - coordmin
 
     function eval_profiles(coords)
         xs = @. xmin + mod(coords - coord0 - c * t - coordmin, L_phys)
@@ -575,18 +575,18 @@ function evaluate_solitary_wave_2D(wave::SolitaryWave1D, gridx, gridy, t, backen
 
     if direction == :x
         h1d, η1d, u1d, w1d = eval_profiles(collect(gridx))
-        h  = repeat(h1d,  1, ny)
-        η  = repeat(η1d,  1, ny)
-        vx = repeat(u1d,  1, ny)
+        h = repeat(h1d, 1, ny)
+        η = repeat(η1d, 1, ny)
+        vx = repeat(u1d, 1, ny)
         vy = zeros(nx, ny)
-        w  = repeat(w1d,  1, ny)
+        w = repeat(w1d, 1, ny)
     elseif direction == :y
         h1d, η1d, u1d, w1d = eval_profiles(collect(gridy))
-        h  = repeat(h1d', nx, 1)
-        η  = repeat(η1d', nx, 1)
+        h = repeat(h1d', nx, 1)
+        η = repeat(η1d', nx, 1)
         vx = zeros(nx, ny)
         vy = repeat(u1d', nx, 1)
-        w  = repeat(w1d', nx, 1)
+        w = repeat(w1d', nx, 1)
     else
         error("direction must be :x or :y")
     end
@@ -672,10 +672,6 @@ function compute_energy_partials_split_form(q, cache)
 
     return dE_dh, dE_dvx, dE_dvy, dE_deta, dE_dw
 end
-
-
-
-
 
 function compute_energy_time_derivative(q, cache, t)
     dE_dh, dE_dvx, dE_dvy, dE_deta, dE_dw = compute_energy_partials_split_form(q, cache)

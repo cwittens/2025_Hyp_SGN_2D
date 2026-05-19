@@ -13,7 +13,7 @@ Three test cases with periodic wave trains (page 37):
 
 function data_semi_shoal(i)
     # data scrapped from paper: https://www.math.u-bordeaux.fr/~mricchiu/RF2014.pdf
-    path = joinpath(@__DIR__, "data", "circular_shoal")
+    path = joinpath(@__DIR__, "data", "semi_shoal")
 
     data_path_1 = joinpath(path, "T$(i)_1.csv")
     data_path_2 = joinpath(path, "T$(i)_2.csv")

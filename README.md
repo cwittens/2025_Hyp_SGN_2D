@@ -33,7 +33,7 @@ use the implementations provided here, please **also** cite this repository as
 ## Abstract
 
 We develop energy-conserving numerical methods for a two-dimensional hyperbolic
-approximation of the Serre–Green–Naghdi equations with variable bathymetry
+approximation of the Serre—Green—Naghdi equations with variable bathymetry
 for both periodic and reflecting boundary conditions. The hyperbolic
 formulation avoids the costly inversion of an elliptic operator present in the
 classical model. Our schemes combine split forms with summation-by-parts (SBP)
@@ -64,7 +64,7 @@ described in the `README.md` file therein.
 
 ## Authors
 
-- [Collin Wittenstein](https://github.com/cwittens) (Johannes Gutenberg University Mainz, Germany)
+- [Collin Wittenstein](https://cwittens.github.io) (Johannes Gutenberg University Mainz, Germany)
 - [Vincent Marks](https://github.com/vincmarks) (Johannes Gutenberg University Mainz, Germany)
 - [Mario Ricchiuto](https://team.inria.fr/cardamom/marioricchiuto) (Inria at University of Bordeaux, France)
 - [Hendrik Ranocha](https://ranocha.de) (Johannes Gutenberg University Mainz, Germany)

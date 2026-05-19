@@ -16,7 +16,7 @@ The following table shows approximate execution times (in seconds) for each expe
 
 | Experiment                              | NVIDIA H200  | AMD MI210 | CPU Intel i7-1185G7 |
 |-----------------------------------------|--------------|-----------|---------------------|
-| Hyperbolic Soliton                      | 82.1         | 102.1     | 166.7               |
+| Hyperbolic Soliton                      | 20.0         | 26.3      | 36.6                |
 | One-dimensional Solitary Wave           | 29.0         | 82.5      | 148.2               |
 | Manufactured Solution                   | 229.2        | 170.4     | too long            |
 | Semidiscrete Energy Conservation        | 481.9        | 694.2     | too long            |
@@ -48,7 +48,6 @@ Then you can run any of the following commands to reproduce specific experiments
 
 ## 5 Relative Equilibrium Structure
 
-### 5.1 Solitary Wave Solutions for 1D HSGN
 ```julia
 hyperbolic_soliton_results(backend)
 ```
@@ -57,7 +56,7 @@ hyperbolic_soliton_results(backend)
 
 ### 6.1.1 One-dimensional Solitary Wave
 ```julia
-convergence_study_1D_plane_wave(backend)
+convergence_study_1D_plane_wave_combined(backend)
 ```
 
 ### 6.1.2 Manufactured Solution for the Two-Dimensional System
@@ -126,6 +125,6 @@ reproduce_square_dam_break_results(backend)
 long_term_dam_break_results(backend)
 ```
 
-## 6.12 Benchmarking Results
+## 6.12 Performance Comparison
 
 The benchmarking plots comparing performance across different hardware (Nvidia H200, AMD MI210, Intel i7-11th gen CPU) cannot be reproduced by simply executing the code, as they require data from runs on the specific hardware platforms. The code used to generate these plots and the collected timing data can be found in `benchmarking.jl`.

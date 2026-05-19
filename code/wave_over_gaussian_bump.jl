@@ -57,10 +57,10 @@ function reproduce_gaussian_busto_results(backend)
         label="Hyperbolic Serre-Green-Naghdi",
         xlabel="x", ylabel="h",
         # title="Wave over Gaussian Bathymetry at y = 0",
-        title = "",
+        title="",
         legend=:bottomright,
         lw=4,
-        size =(600, 400)
+        size=(600, 400)
     )
 
     x_data_busto, h_data_busto = data_busto()
@@ -102,7 +102,7 @@ function reproduce_energy_variable_results(backend, tspan=(0.0, 100.0))
             legend=false,)
         push!(P, p)
 
-        @info "figure saved at:" savefig(p, joinpath(plots_folder, saveas))
+        # @info "figure saved at:" savefig(p, joinpath(plots_folder, saveas))
     end
 
     yticks!(P[1], [-5e-16, -2.5e-16, 0, 2.5e-16, 5e-16], ["-5 x 10^{-16}", "-2.5 x 10^{-16}", "0", "2.5 x 10^{-16}", "5 x 10^{-16}"])

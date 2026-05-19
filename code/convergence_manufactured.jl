@@ -137,76 +137,80 @@ function convergence_study_manufactured_solution(backend)
         end
     end
 
-    # plot and save figures
-    P = []
-    xticks_ms = (Ns_ms, string.(Ns_ms))
-    variables = [
-        (L"h" * " — water height", :solid),
-        (L"u" * " — velocity in " * L"x", :solid),
-        (L"v" * " — velocity in " * L"y", :dash),
-        (L"\eta" * " — auxiliary variable", :dash),
-        (L"w" * " — auxiliary variable", :solid)
-    ]
+    begin
 
-    for bc_idx in [2, 1]
+        # plot and save figures
+        P = []
+        xticks_ms = (Ns_ms, string.(Ns_ms))
+        variables = [
+            (L"h" * " — water height", :solid, :circle),
+            (L"u" * " — velocity in " * L"x", :dot, :diamond),
+            (L"v" * " — velocity in " * L"y", :dashdotdot, :diamond),
+            (L"\eta" * " — auxiliary variable", :dash, :square),
+            (L"w" * " — auxiliary variable", :dashdot, :utriangle)
+        ]
 
-        if bc_idx == 1
-            title = "Manufactured solution convergence study\nfor reflecting boundary conditions"
-            title = "reflecting boundary conditions"
-            save_as = joinpath(plots_folder, "manufactured_solution_convergence_study_reflecting.pdf")
-        else
-            title = "Manufactured solution convergence study\nfor periodic boundary conditions"
-            title = "periodic boundary conditions"
-            save_as = joinpath(plots_folder, "manufactured_solution_convergence_study_periodic.pdf")
+        for bc_idx in [2, 1]
+
+            if bc_idx == 1
+                title = "Manufactured solution convergence study\nfor reflecting boundary conditions"
+                title = "reflecting boundary conditions"
+                save_as = joinpath(plots_folder, "manufactured_solution_convergence_study_reflecting.pdf")
+            else
+                title = "Manufactured solution convergence study\nfor periodic boundary conditions"
+                title = "periodic boundary conditions"
+                save_as = joinpath(plots_folder, "manufactured_solution_convergence_study_periodic.pdf")
+            end
+
+
+
+            p_ms = plot(
+                yscale=:log10, xscale=:log10, xticks=xticks_ms,
+                title=title,
+                xlabel=L"\mathcal{N}", ylabel=L"\Vert f_{\mathrm{num}} - f_{\mathrm{ana}} \; \Vert_{L^2}",
+                legend=false,
+                size=(700, 650)
+            )
+
+            for (i, (label, ls, mk)) in enumerate(variables)
+                plot!(p_ms, Ns_ms, L2s_ms[i, :, bc_idx], label=label, marker=mk, linestyle=ls, ms=4.5)
+            end
+            ylim = ylims(p_ms)
+            xlim = xlims(p_ms)
+            Ns_ms_ref = range(0.8 * Ns_ms[1], 1.2 * Ns_ms[end], length=100)
+            if bc_idx == 2
+                ref_line = Ns_ms[1]^2.0 * mean(L2s_ms[1:3, 1, bc_idx]) .* (Ns_ms_ref .^ -2.0)
+            else
+                ref_line = Ns_ms[1]^2.0 * mean(L2s_ms[4:5, 1, bc_idx]) .* (Ns_ms_ref .^ -2.0)
+            end
+            plot!(p_ms, Ns_ms_ref, ref_line, label=L"2^{\mathrm{nd}}" * "order reference line", linestyle=:solid, ylims=ylim, xlims=xlim, alpha=0.7, color=:black)
+
+            # plot!(p_ms, left_margin=1Plots.mm, top_margin=3Plots.mm, bottom_margin=-15Plots.mm, right_margin=5Plots.mm)
+
+            push!(P, p_ms)
+
+            # @info "figure saved at:" savefig(p_ms, joinpath(plots_folder, save_as))
+
         end
 
+        # to legend plot
+        legend_plot = plot(legend=:top, framestyle=:none, legendfontsize=13, label="", legend_column=3,)
+        for (i, (label, ls, mk)) in enumerate(variables)
+            plot!(legend_plot, [], [], label=label, marker=mk, linestyle=ls, ms=2.5)
+        end
+        plot!(legend_plot, [], [], label=L"2^{\mathrm{nd}}" * "order reference line", linestyle=:solid, alpha=0.7, color=:black)
 
+        ylabel!(P[2], "")
 
-        p_ms = plot(
-            yscale=:log10, xscale=:log10, xticks=xticks_ms,
-            title=title,
-            xlabel=L"\mathcal{N}", ylabel=L"\Vert f_{\mathrm{num}} - f_{\mathrm{ana}} \; \Vert_{L^2}",
-            legend=false,
-            size=(700, 650)
+        push!(P, legend_plot)
+        P_MS = plot(P..., layout=@layout([a b; g{0.07h}]), size=(1200, 480),
+            # suptitle="Manufactured solution convergence study",
+            suptitle="",
+            left_margin=8Plots.mm, bottom_margin=5Plots.mm, right_margin=2Plots.mm,
         )
 
-        for (i, (label, ls)) in enumerate(variables)
-            plot!(p_ms, Ns_ms, L2s_ms[i, :, bc_idx], label=label, marker=:o, linestyles=ls, ms=1.5)
-        end
-        ylim = ylims(p_ms)
-        xlim = xlims(p_ms)
-        Ns_ms_ref = range(0.8 * Ns_ms[1], 1.2 * Ns_ms[end], length=100)
-        ref_line = Ns_ms[1]^2.0 * mean(L2s_ms[1:3, 1, bc_idx]) .* (Ns_ms_ref .^ -2.0)
-        plot!(p_ms, Ns_ms_ref, ref_line, label=L"2^{\mathrm{nd}}" * "order reference line", linestyle=:dot, ylims=ylim, xlims=xlim)
-
-        # plot!(p_ms, left_margin=1Plots.mm, top_margin=3Plots.mm, bottom_margin=-15Plots.mm, right_margin=5Plots.mm)
-
-        push!(P, p_ms)
-
-        # @info "figure saved at:" savefig(p_ms, joinpath(plots_folder, save_as))
-
+        @info "figure saved at:" savefig(P_MS, joinpath(plots_folder, "manufactured_solution_convergence_study_combined.pdf"))
     end
-
-    # to legend plot
-    legend_plot = plot(legend=:top, framestyle=:none, legendfontsize=13, label="", legend_column=3,)
-    for (i, (label, ls)) in enumerate(variables)
-        plot!(legend_plot, [], [], label=label, marker=:o, linestyles=ls, ms=0.1)
-    end
-    plot!(legend_plot, [], [], label=L"2^{\mathrm{nd}}" * "order reference line", linestyle=:dot)
-
-    ylabel!(P[2], "")
-
-    push!(P, legend_plot)
-    P_MS = plot(P..., layout=@layout([a b; g{0.07h}]), size=(1200, 480),
-        # suptitle="Manufactured solution convergence study",
-        suptitle="",
-        left_margin=8Plots.mm, bottom_margin=5Plots.mm, right_margin=2Plots.mm,
-    )
-
-    @info "figure saved at:" savefig(P_MS, joinpath(plots_folder, "manufactured_solution_convergence_study_combined.pdf"))
-
-
-
 end
 
 

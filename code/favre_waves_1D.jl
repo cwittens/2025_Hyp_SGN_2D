@@ -144,7 +144,7 @@ function reproduce_favre_1D_results(backend)
             all_data_favre = data_favre()
             data = all_data_favre[(ε, v)]
             scatter!(data[:, 1], data[:, 2];
-                label="", linestyle=:dash, color=colors[r], alpha= 0.6, ms = 2.5)
+                label="", linestyle=:dash, color=colors[r], alpha=0.6, ms=2.5)
         end
 
         xlims!(45, 90)
@@ -154,7 +154,7 @@ function reproduce_favre_1D_results(backend)
         push!(plots, p)
     end
 
-    legend_plot = scatter([], [], legend=:top, framestyle=:none, legendfontsize=13, label="numerical data   ", legend_column=4,  color=:red, ms=2, alpha=0.5)
+    legend_plot = scatter([], [], legend=:top, framestyle=:none, legendfontsize=13, label="numerical data   ", legend_column=4, color=:red, ms=2, alpha=0.5)
     for (i, t) in enumerate(desired_times)
         plot!(legend_plot, [], [], label=L"\tilde{t} = %$t", linewidth=2.5, color=colors[i])
     end

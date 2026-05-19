@@ -219,7 +219,7 @@ function reproduce_dingemans_results(backend)
         xlabel="x",
         ylabel="h + b",
         ylims=(-0.03, 0.90),
-        size = (600, 400)
+        size=(600, 400)
     )
 
 

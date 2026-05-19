@@ -25,7 +25,7 @@ function reproduce_henderson_results(backend)
     g = 9.81
     xmin = -10.0
     xmax = 10.0
-    Nx = 4000 
+    Nx = 4000
 
     ymin = 0.0
     ymax = 1.0
@@ -79,14 +79,14 @@ function reproduce_henderson_results(backend)
             )
 
             scatter!(p, x_data, 100 * (h_data .+ 0.05), color=2, ms=3., markerstrokewidth=0.01, alpha=0.8)
-                # label="experimental data (Henderson)", linestyle=:dot, lw=6)
+            # label="experimental data (Henderson)", linestyle=:dot, lw=6)
 
             push!(simulation_plots, p)
         end
-        for i in [1, 4-1, 7-1, 10-1, 13-1]
+        for i in [1, 4 - 1, 7 - 1, 10 - 1, 13 - 1]
             ylabel!(simulation_plots[i], "h [cm]")
         end
-        for j in [2, 3+1, 5, 6+1, 8, 9+1, 11, 12+1, 14]
+        for j in [2, 3 + 1, 5, 6 + 1, 8, 9 + 1, 11, 12 + 1, 14]
             yticks!(simulation_plots[j], [5.0, 5.5, 6.0, 6.5, 7.0, 7.5], [""])
         end
 
@@ -97,12 +97,12 @@ function reproduce_henderson_results(backend)
         legend_plot = plot(legend=true, framestyle=:none, legendfontsize=17)
         yticks!(legend_plot, [1e10], [""]) # this fixes alignment issues 
         plot!(legend_plot, [], [], label="Hyperbolic\nSerre-Green-Naghdi", color=1,)
-        scatter!(legend_plot, [], [], color=2,ms=3.5, markerstrokewidth=0.01,
-            label=" experimental data", )
+        scatter!(legend_plot, [], [], color=2, ms=3.5, markerstrokewidth=0.01,
+            label=" experimental data",)
 
 
 
-        all_plots =  [simulation_plots..., legend_plot]
+        all_plots = [simulation_plots..., legend_plot]
         all_plots = [simulation_plots[1:2]..., legend_plot, simulation_plots[3:end]...]
         P = plot(all_plots..., size=(1200, 1600), #suptitle="Two colliding solitary waves",
             layout=@layout([a b c; d e f; g h i; j k l; m{0.33w} w g{0.33w}]),# m{0.33w} n{0.33w} g])
