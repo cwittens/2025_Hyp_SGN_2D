@@ -32,7 +32,7 @@ function problem_to_benchmark_wave_over_gaussian_simulation(Nx, backend)
     callback, _ = save_and_print_callback(saveat, save_everything=false, print_every_n=1000)
 
     prob = ODEProblem(rhs_split!, q0, tspan, cache)
-    t = @elapsed solve(prob, RDPK3SpFSAL35(), save_everystep=false, reltol=1e-6, abstol=1e-6, callback=callback)
+    t = @elapsed sol = solve(prob, RDPK3SpFSAL35(), save_everystep=false, reltol=1e-6, abstol=1e-6, callback=callback)
     nf =  sol.stats.nf
     return t, nf
 end
@@ -72,9 +72,15 @@ N_RHS_AMD = [5864, 6089, 5609, 5804, 6934, 11310, 21072, 41756, 83539]
 NX_CPU = [32, 64, 128, 256, 512, 1024, 2048]
 Times_CPU = [0.228672, 1.6039269, 4.2537968, 12.0992455, 74.2211993, 404.8305322, 2677.6244409]
 
+NX_APPLE = [32, 64, 128, 256, 512, 1024, 2048]
+Times_APPLE = [0.114675416, 0.731794291, 0.955598958, 2.842376084, 12.810089083, 88.423194, 881.114038209]
+N_RHS_APPLE = [6169, 5754, 5649, 5739, 6959, 11310, 21072]
+
+
 intel_blue = colorant"#0068B5"
 amd_red = colorant"#ED1C24"
 nvidia_green = colorant"#76B900"
+apple_gray = colorant"#6E6E73"
 
 begin
 #! format: noindent
@@ -92,6 +98,9 @@ custom_x_ticks = [32, 64, 128, 256, 512, 1024, 2048, 4096, 8192]
 
 p = plot(NX_CPU, Times_CPU, label="CPU i7-11th", lw=3,
     color=intel_blue, marker=:diamond, size=(600, 400), left_margin=2Plots.mm)
+
+plot!(p, NX_APPLE, Times_APPLE, label="Apple M4", lw=3,
+    color=apple_gray, marker=:utriangle)
 
 plot!(p, NX_AMD, Times_AMD, label="AMD MI210", lw=3,
     color=amd_red, marker=:square)
