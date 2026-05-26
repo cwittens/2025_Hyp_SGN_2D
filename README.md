@@ -64,7 +64,7 @@ described in the `README.md` file therein.
 
 ## Authors
 
-- [Collin Wittenstein](https://cwittens.github.io) (Johannes Gutenberg University Mainz, Germany)
+- [Collin Wittenstein](https://cwittens.github.io) (Massachusetts Institute of Technology, USA & Johannes Gutenberg University Mainz, Germany)
 - [Vincent Marks](https://github.com/vincmarks) (Johannes Gutenberg University Mainz, Germany)
 - [Mario Ricchiuto](https://team.inria.fr/cardamom/marioricchiuto) (Inria at University of Bordeaux, France)
 - [Hendrik Ranocha](https://ranocha.de) (Johannes Gutenberg University Mainz, Germany)
