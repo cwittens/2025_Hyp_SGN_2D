@@ -1,6 +1,6 @@
 {
     "license": "MIT",
-    "title": "Reproducibility repository for GPU-Accelerated Energy-Conserving Methods for the Hyperbolized Serre-Green-Naghdi Equations in 2D",
+    "title": "Reproducibility repository for GPU-Accelerated Energy-Conserving Methods for the Two-Dimensional Hyperbolized Serre—Green—Naghdi Equations",
     "upload_type": "software",
     "creators": [
         {
