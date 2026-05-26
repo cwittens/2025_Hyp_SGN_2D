@@ -30,7 +30,7 @@ Approximate execution times (in seconds) for all numerical experiments, includin
 | Solitary Wave over a Gaussian Obstacle  | 1174.9              | 268.7       | 30.0      | 12.7         |
 | Semi-circular Shoal (case a)            | 5444.4              | 1218.1      | 162.1     | 53.9         |
 | Semi-circular Shoal (case b)            | 5007.1              | 1010.3      | 118.5     | 46.3         |
-| Semi-circular Shoal (case b)            | 7012.2              | 1466.8      | 167.7     | 65.6         |
+| Semi-circular Shoal (case c)            | 7012.2              | 1466.8      | 167.7     | 65.6         |
 | Cylindric Dam Break                     | 3641.4              | 849.6       | 89.1      | 34.9         |
 | Square Dam Break                        | 3556.3              | 882.6       | 85.5      | 40.6         |
 | Long-term Cylindrical Dam Break         | OOM                 | OOM         | OOM       | 2270.0       |
