@@ -71,8 +71,7 @@ described in the `README.md` file therein.
 
 ## License
 
-The code in this repository is published under the MIT license, see the
-`LICENSE` file.
+The code in this repository is published under the MIT license, see the [`LICENSE`](/LICENSE) file.
 
 ## Disclaimer
 
