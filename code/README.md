@@ -16,23 +16,23 @@ Approximate execution times (in seconds) for all numerical experiments, includin
 
 | Experiment                              | CPU Intel i7-1185G7 | Apple M4    | AMD MI210 | NVIDIA H200  |
 |-----------------------------------------|---------------------| ------------|-----------|--------------|
-| Hyperbolic Soliton                      | 37.8                | 2.7         | 5.6       | 14.8         |
-| One-dimensional Solitary Wave           | 102.8               | 28.0        | 114.3     | 44.7         |
-| Manufactured Solution                   | 10057.9             | 2962.3      | 170.7     | 237.0        |
+| Hyperbolic Soliton                      | 7.6                 | 2.7         | 5.6       | 14.8         |
+| One-dimensional Solitary Wave           | 63.4                | 28.0        | 114.3     | 44.7         |
+| Manufactured Solution                   | 10854.4             | 2962.3      | 170.7     | 237.0        |
 | Semidiscrete Energy Conservation        | OOM                 | OOM         | 691.9     | 384.1        |
-| Dingemans Experiment                    | 1261.5              | 288.7       | 221.7     | 19.9         |
-| Head-on Collision of Solitary Waves     | 13.7                | 3.6         | 4.6       | 1.6          |
-| Riemann Problem                         | 19.9                | 4.8         | 8.6       | 3.2          |
-| Favre Waves (Short-time Evolution)      | 16.3                | 4.6         | 13.0      | 2.8          |
-| Favre Waves (Froude Number Analysis)    | 171.4               | 40.8        | 330.4     | 9.4          |
-| Reflection of Solitary Waves (A=0.075)  | 13.2                | 2.5         | 8.3       | 1.8          |
-| Reflection of Solitary Waves (A=0.65)   | 8.8                 | 1.1         | 7.3       | 0.6          |
-| Solitary Wave over a Gaussian Obstacle  | 1363.3              | 268.7       | 30.0      | 12.7         |
-| Semi-circular Shoal (case a)            | 4670.0              | 1218.1      | 162.1     | 53.9         |
-| Semi-circular Shoal (case b)            | 5045.8              | 1010.3      | 118.5     | 46.3         |
-| Semi-circular Shoal (case b)            | 7128.7              | 1466.8      | 167.7     | 65.6         |
-| Cylindric Dam Break                     | 3416.5              | 849.6       | 89.1      | 34.9         |
-| Square Dam Break                        | 3053.9              | 882.6       | 85.5      | 40.6         |
+| Dingemans Experiment                    | 1474.9              | 288.7       | 221.7     | 19.9         |
+| Head-on Collision of Solitary Waves     | 12.0                | 3.6         | 4.6       | 1.6          |
+| Riemann Problem                         | 15.3                | 4.8         | 8.6       | 3.2          |
+| Favre Waves (Short-time Evolution)      | 11.8                | 4.6         | 13.0      | 2.8          |
+| Favre Waves (Froude Number Analysis)    | 140.2               | 40.8        | 330.4     | 9.4          |
+| Reflection of Solitary Waves (A=0.075)  | 5.1                 | 2.5         | 8.3       | 1.8          |
+| Reflection of Solitary Waves (A=0.65)   | 1.4                 | 1.1         | 7.3       | 0.6          |
+| Solitary Wave over a Gaussian Obstacle  | 1174.9              | 268.7       | 30.0      | 12.7         |
+| Semi-circular Shoal (case a)            | 5444.4              | 1218.1      | 162.1     | 53.9         |
+| Semi-circular Shoal (case b)            | 5007.1              | 1010.3      | 118.5     | 46.3         |
+| Semi-circular Shoal (case b)            | 7012.2              | 1466.8      | 167.7     | 65.6         |
+| Cylindric Dam Break                     | 3641.4              | 849.6       | 89.1      | 34.9         |
+| Square Dam Break                        | 3556.3              | 882.6       | 85.5      | 40.6         |
 | Long-term Cylindrical Dam Break         | OOM                 | OOM         | OOM       | 2270.0       |
 
 ## Getting Started
